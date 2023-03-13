@@ -1,0 +1,30 @@
+{
+  "name": "passwordless-api",
+  "version": "0.1.0",
+  "description": "",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "ts-node src/index.ts",
+    "build": "tsc -p ./tsconfig.json",
+    "dev:api": "npm run --prefix ./api dev",
+    "dev:admin:back": "npm run --prefix ./admin/back dev",
+    "dev:admin:front": "npm run --prefix ./admin/front dev",
+    "dev": "concurrently --names API,ADMIN,ADMIN_FRONT \"npm run dev:api\" \"npm run dev:admin:back\" \"npm run dev:admin:front\""
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^18.14.6",
+    "dotenv": "^16.0.3",
+    "fastify": "^4.14.0",
+    "mongoose": "^7.0.0",
+    "typescript": "^4.9.5",
+    "winston": "^3.8.2"
+  },
+  "type": "module",
+  "devDependencies": {
+    "concurrently": "^7.6.0",
+    "nodemon": "^2.0.21"
+  }
+}
