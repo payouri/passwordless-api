@@ -8,23 +8,52 @@
     "start": "ts-node src/index.ts",
     "build": "tsc -p ./tsconfig.json",
     "dev:api": "npm run --prefix ./api dev",
+    "dev:front": "npm run --prefix ./front dev",
     "dev:admin:back": "npm run --prefix ./admin/back dev",
     "dev:admin:front": "npm run --prefix ./admin/front dev",
-    "dev": "concurrently --names API,ADMIN,ADMIN_FRONT \"npm run dev:api\" \"npm run dev:admin:back\" \"npm run dev:admin:front\""
+    "dev": "concurrently --names API,ADMIN,ADMIN_FRONT,FRONT \"npm run dev:api\" \"npm run dev:admin:back\" \"npm run dev:admin:front\" \"npm run dev:front\"",
+    "ts-node": "ts-node"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@iconscout/react-unicons": "^2.0.0",
+    "@radix-ui/react-form": "^0.0.2",
+    "@radix-ui/react-tabs": "^1.0.3",
     "@types/node": "^18.14.6",
     "dotenv": "^16.0.3",
     "fastify": "^4.14.0",
+    "i18next": "^22.4.11",
+    "localforage": "^1.10.0",
+    "match-sorter": "^6.3.1",
     "mongoose": "^7.0.0",
+    "nanoid": "^4.0.1",
+    "rc-input": "^0.2.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.43.5",
+    "react-i18next": "^12.2.0",
+    "react-router-dom": "^6.9.0",
+    "sort-by": "^1.2.0",
+    "styled-components": "^5.3.8",
     "typescript": "^4.9.5",
-    "winston": "^3.8.2"
+    "winston": "^3.8.2",
+    "zod": "^3.21.4"
   },
   "type": "module",
   "devDependencies": {
+    "@babel/core": "^7.21.0",
+    "@storybook/react": "^6.5.16",
+    "@types/node": "^18.15.0",
+    "@types/react": "^18.0.27",
+    "@types/react-dom": "^18.0.10",
+    "@types/styled-components": "^5.1.26",
+    "@vitejs/plugin-react": "^3.1.0",
+    "babel-loader": "^8.3.0",
     "concurrently": "^7.6.0",
-    "nodemon": "^2.0.21"
+    "nodemon": "^2.0.21",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.3",
+    "vite": "^4.1.0"
   }
 }

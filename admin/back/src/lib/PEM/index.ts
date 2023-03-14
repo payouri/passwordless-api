@@ -1,4 +1,4 @@
-import { PEM } from "../../config";
+import { PEM } from "../../config.js";
 import { isAbsolute, sep } from "path";
 import { readFile } from "fs/promises";
 
