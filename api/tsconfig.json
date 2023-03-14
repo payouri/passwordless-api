@@ -1,7 +1,10 @@
 {
   "extends": "../base.tsconfig.json",
   "compilerOptions": {
-    "outDir": "../dist/api"
+    "outDir": "../dist/api",
+    "paths": {
+      "@/shared/*": ["../shared/*"]
+    }
   },
   "rootDir": "./src",
   "include": ["../shared/**/*.ts", "./src/**/*.ts"]
