@@ -2,7 +2,6 @@ import { Schema } from "mongoose";
 import { ZodObject, ZodRawShape } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
 import { convertZodTypeToMongooseType } from "./convertFunctions/index.js";
-import { writeFile } from "fs/promises";
 
 export const convertZodSchemaToMongooseModel = <
   T extends ZodObject<ZodRawShape>
