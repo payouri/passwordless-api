@@ -5,7 +5,11 @@ export const DomainSchema = z.object({
   name: z.string(),
   owner: z.string(),
   pubKey: z.string(),
-  allowedOrigins: z.array(z.string()),
+  allowedHosts: z.array(z.string()),
+  metadata: z.record(z.string(), z.string().or(z.number()).or(z.boolean())),
+  authTypes: z.array(z.string()),
+  returnURL: z.string(),
+  apiKey: z.string(),
 });
 
 export type DomainSchemaType = z.infer<typeof DomainSchema>;
