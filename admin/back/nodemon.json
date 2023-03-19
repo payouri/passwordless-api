@@ -2,6 +2,6 @@
   "execMap": {
     "ts": "ts-node"
   },
-  "watch": ["src/"],
+  "watch": ["src/", "../../shared"],
   "ext": "ts, json, js"
 }

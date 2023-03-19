@@ -1,4 +1,4 @@
-import { Schema } from "mongoose";
+import { Schema, SchemaOptions } from "mongoose";
 import { ZodObject, ZodRawShape } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
 import { convertZodTypeToMongooseType } from "./convertFunctions/index.js";
@@ -6,7 +6,8 @@ import { convertZodTypeToMongooseType } from "./convertFunctions/index.js";
 export const convertZodSchemaToMongooseModel = <
   T extends ZodObject<ZodRawShape>
 >(
-  zodSchema: T
+  zodSchema: T,
+  mongoSchemaOptions?: SchemaOptions<any>
 ): Schema => {
   const jsonSchema = zodToJsonSchema(zodSchema) as unknown as {
     properties: Record<string, { type: string }>;
@@ -24,5 +25,5 @@ export const convertZodSchemaToMongooseModel = <
     requiredFields: jsonSchema.required,
   });
 
-  return new Schema(schemaData);
+  return new Schema(schemaData, mongoSchemaOptions);
 };

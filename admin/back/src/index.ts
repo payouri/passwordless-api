@@ -1,3 +1,4 @@
+// import "./registerAliases.js";
 import { fastify } from "fastify";
 import { PORT } from "./config.js";
 import { initApp } from "./loaders/index.js";

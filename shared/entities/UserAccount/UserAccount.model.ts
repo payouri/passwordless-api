@@ -17,7 +17,9 @@ export const getUserAccountModel = (
       c,
       c.model<UserAccountSchemaType>(
         "UserAccount",
-        convertZodSchemaToMongooseModel(UserAccountSchema)
+        convertZodSchemaToMongooseModel(UserAccountSchema, {
+          timestamps: true,
+        })
       )
     );
   }

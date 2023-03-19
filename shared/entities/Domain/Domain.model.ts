@@ -14,7 +14,9 @@ export const getDomainModel = (
       c,
       c.model<DomainSchemaType>(
         "Domain",
-        convertZodSchemaToMongooseModel(DomainSchema)
+        convertZodSchemaToMongooseModel(DomainSchema, {
+          timestamps: true,
+        })
       )
     );
   }

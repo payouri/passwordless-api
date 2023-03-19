@@ -1,27 +1,17 @@
 import { DomainModel } from "../../../../../shared/entities/Domain/Domain.model.js";
 import { UserAccountModel } from "../../../../../shared/entities/UserAccount/UserAccount.js";
-import { buildDomainServices } from "../../services/Domain/Domain.service.js";
-import { buildUserAccountServices } from "../../services/UserAccount/UserAccount.services.js";
+import { getDomainServices } from "../../services/Domain/Domain.service.js";
+import { getUserAccountServices } from "../../services/UserAccount/UserAccount.services.js";
 
-export const buildInitAdminControllers = ({
-  adminDomainModel,
-  adminUserAccountModel,
-}: {
-  adminDomainModel: DomainModel;
-  adminUserAccountModel: UserAccountModel;
-}) => {
-  const userAccountServices = buildUserAccountServices({
-    adminUserAccountModel,
-  });
-  const domainServices = buildDomainServices({
-    adminDomainModel,
-  });
+export const buildInitAdminControllers = () => {
+  const userAccountServices = getUserAccountServices();
+  const domainServices = getDomainServices();
 
   return {
     verifyAdmin: async () => {
       const [adminUserAccount, adminDomain] = await Promise.all([
         userAccountServices.isAdminUserAccountExist(),
-        adminDomainModel.findOne({}),
+        domainServices.isAdminDomainExist(),
       ]);
 
       if (!adminUserAccount || !adminDomain) {

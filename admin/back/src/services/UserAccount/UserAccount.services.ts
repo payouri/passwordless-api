@@ -7,19 +7,40 @@ import { ADMIN_CONFIG } from "../../config.js";
 import { getPublicKey } from "../../lib/AsymetricEncryption/index.js";
 import { isDuplicateKeyError } from "../../../../../shared/helpers/index.js";
 
+let userAccountServices: ReturnType<typeof buildUserAccountServices>;
+
 export const buildUserAccountServices = ({
   adminUserAccountModel,
+  userAccountModel,
 }: {
   adminUserAccountModel: UserAccountModel;
+  userAccountModel: UserAccountModel;
 }) => {
-  return {
+  const service = {
+    async getUserAccount(
+      params:
+        | {
+            email: string;
+          }
+        | {
+            phone: string;
+          }
+        | {
+            _id: string;
+          }
+    ) {
+      return userAccountModel.findOne(params).lean().exec();
+    },
     async isAdminUserAccountExist() {
-      const adminUserAccount = await adminUserAccountModel.findOne(
-        {},
-        {
-          _id: 1,
-        }
-      );
+      const adminUserAccount = await adminUserAccountModel
+        .findOne(
+          {},
+          {
+            _id: 1,
+          }
+        )
+        .lean()
+        .exec();
 
       return adminUserAccount !== null;
     },
@@ -32,17 +53,20 @@ export const buildUserAccountServices = ({
       return adminUserAccountModel.create(params);
     },
     getAdminUserAccount() {
-      return adminUserAccountModel.findOne({});
+      return adminUserAccountModel.findOne({}).lean().exec();
     },
     addAdminUserAccountDomain(domainId: string) {
-      return adminUserAccountModel.updateOne(
-        {},
-        {
-          $push: {
-            domains: domainId,
-          },
-        }
-      );
+      return adminUserAccountModel
+        .updateOne(
+          {},
+          {
+            $push: {
+              domains: domainId,
+            },
+          }
+        )
+        .lean()
+        .exec();
     },
     async initAdminUserAccount() {
       const { adminUser } = ADMIN_CONFIG;
@@ -76,4 +100,16 @@ export const buildUserAccountServices = ({
       }
     },
   };
+
+  userAccountServices = service;
+
+  return service;
+};
+
+export const getUserAccountServices = () => {
+  if (!userAccountServices) {
+    throw new Error("User account services not initialized");
+  }
+
+  return userAccountServices;
 };

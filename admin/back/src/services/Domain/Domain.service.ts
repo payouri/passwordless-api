@@ -9,12 +9,14 @@ import {
 } from "../../lib/AsymetricEncryption/index.js";
 import { isDuplicateKeyError } from "../../../../../shared/helpers/index.js";
 
+let domainServices: ReturnType<typeof buildDomainServices>;
+
 export const buildDomainServices = ({
   adminDomainModel,
 }: {
   adminDomainModel: DomainModel;
 }) => {
-  return {
+  const service = {
     async isAdminDomainExist() {
       const adminDomain = await adminDomainModel.findOne(
         {},
@@ -74,4 +76,16 @@ export const buildDomainServices = ({
       }
     },
   };
+
+  domainServices = service;
+
+  return service;
+};
+
+export const getDomainServices = () => {
+  if (!domainServices) {
+    throw new Error("Domain services not initialized");
+  }
+
+  return domainServices;
 };

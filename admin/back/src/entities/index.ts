@@ -11,6 +11,18 @@ import {
   getCreateUserAccountIndexes,
 } from "../../../../shared/entities/UserAccount/UserAccount.js";
 
+const models: {
+  adminDomainModel: DomainModel | null;
+  domainModel: DomainModel | null;
+  adminUserAccountModel: UserAccountModel | null;
+  userAccountModel: UserAccountModel | null;
+} = {
+  adminDomainModel: null,
+  domainModel: null,
+  adminUserAccountModel: null,
+  userAccountModel: null,
+};
+
 const adminUserAccountIndexes: [IndexDefinition, IndexOptions][] =
   UserAccountDefaultIndexes.concat([
     [
@@ -22,7 +34,9 @@ const adminUserAccountIndexes: [IndexDefinition, IndexOptions][] =
       },
     ],
   ]);
-
+// Application Key 6254de5116742a93
+// Application Secret c6ef5d428527f2a9735d274417d54ae0
+// Consumer Key 510e71627c67341046375bdfc9618928
 const getCreateIndexes = ({
   adminDomainModel,
   adminUserAccountModel,
@@ -64,10 +78,27 @@ export const initModels = async ({
     await createIndexes();
   }
 
+  models.adminDomainModel = adminDomainModel;
+  models.adminUserAccountModel = adminUserAccountModel;
+  models.domainModel = domainModel;
+  models.userAccountModel = userAccountModel;
+
   return {
     adminDomainModel,
     adminUserAccountModel,
     domainModel,
     userAccountModel,
   };
+};
+
+export const getModels = <ModelName extends keyof typeof models>(
+  modelName: ModelName
+): NonNullable<typeof models[ModelName]> => {
+  const model = models[modelName];
+
+  if (!model) {
+    throw new Error(`Model ${modelName} not initialized`);
+  }
+
+  return model;
 };

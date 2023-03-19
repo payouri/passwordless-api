@@ -1,7 +1,8 @@
 {
   "extends": "../base.tsconfig.json",
   "compilerOptions": {
-    "outDir": "../dist/shared"
+    "outDir": "../dist/shared",
+    "jsx": "react-jsx"
   },
   "include": ["./**/*"]
 }
