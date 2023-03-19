@@ -1,5 +1,6 @@
 import { fastify } from "fastify";
 import { PORT } from "./config.js";
+import { initApp } from "./loaders/index.js";
 
 const server = fastify({
   logger: true,
@@ -7,6 +8,8 @@ const server = fastify({
 
 const startServer = async () => {
   try {
+    await initApp();
+
     await server.listen({ port: PORT });
   } catch (err) {
     server.log.error(err);

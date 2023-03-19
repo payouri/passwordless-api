@@ -13,3 +13,5 @@ export const DomainSchema = z.object({
 });
 
 export type DomainSchemaType = z.infer<typeof DomainSchema>;
+
+export type Domain = DomainSchemaType;
