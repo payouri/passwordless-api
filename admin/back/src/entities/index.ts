@@ -1,22 +1,29 @@
-import { Connection, IndexDefinition, IndexOptions } from "mongoose";
+import { Connection, IndexDefinition, IndexOptions, model } from "mongoose";
 import {
-  getDomainModel,
-  getCreateDomainIndexes,
+  AuthSessionModel,
+  getAuthSessionModel,
+  getCreateAuthSessionIndexes,
+} from "../../../../shared/entities/AuthSession/AuthSession.js";
+import {
   DomainModel,
+  getCreateDomainIndexes,
+  getDomainModel,
 } from "../../../../shared/entities/Domain/Domain.js";
 import {
-  getUserAccountModel,
-  UserAccountModel,
-  UserAccountDefaultIndexes,
   getCreateUserAccountIndexes,
+  getUserAccountModel,
+  UserAccountDefaultIndexes,
+  UserAccountModel,
 } from "../../../../shared/entities/UserAccount/UserAccount.js";
 
 const models: {
+  adminAuthSessionModel: AuthSessionModel | null;
   adminDomainModel: DomainModel | null;
   domainModel: DomainModel | null;
   adminUserAccountModel: UserAccountModel | null;
   userAccountModel: UserAccountModel | null;
 } = {
+  adminAuthSessionModel: null,
   adminDomainModel: null,
   domainModel: null,
   adminUserAccountModel: null,
@@ -38,12 +45,17 @@ const adminUserAccountIndexes: [IndexDefinition, IndexOptions][] =
 // Application Secret c6ef5d428527f2a9735d274417d54ae0
 // Consumer Key 510e71627c67341046375bdfc9618928
 const getCreateIndexes = ({
+  adminAuthSessionModel,
   adminDomainModel,
   adminUserAccountModel,
 }: {
+  adminAuthSessionModel: AuthSessionModel;
   adminDomainModel: DomainModel;
   adminUserAccountModel: UserAccountModel;
 }) => {
+  const createAuthSessionIndexes = getCreateAuthSessionIndexes(
+    adminAuthSessionModel
+  );
   const createDomainIndexes = getCreateDomainIndexes(adminDomainModel);
   const createUserAccountIndexes = getCreateUserAccountIndexes(
     adminUserAccountModel,
@@ -51,7 +63,11 @@ const getCreateIndexes = ({
   );
 
   return async () => {
-    await Promise.all([createDomainIndexes(), createUserAccountIndexes()]);
+    await Promise.all([
+      createDomainIndexes(),
+      createUserAccountIndexes(),
+      createAuthSessionIndexes(),
+    ]);
   };
 };
 
@@ -63,13 +79,17 @@ export const initModels = async ({
   adminMongoConnection: Connection;
   apiMongoConnection: Connection;
   shouldCreateIndexes?: boolean;
-}) => {
+}): Promise<
+  { [Key in keyof typeof models]: NonNullable<typeof models[Key]> }
+> => {
+  const adminAuthSessionModel = getAuthSessionModel(adminMongoConnection);
   const adminDomainModel = getDomainModel(adminMongoConnection);
   const domainModel = getDomainModel(apiMongoConnection);
   const adminUserAccountModel = getUserAccountModel(adminMongoConnection);
   const userAccountModel = getUserAccountModel(adminMongoConnection);
 
   const createIndexes = getCreateIndexes({
+    adminAuthSessionModel,
     adminDomainModel,
     adminUserAccountModel,
   });
@@ -78,17 +98,13 @@ export const initModels = async ({
     await createIndexes();
   }
 
+  models.adminAuthSessionModel = adminAuthSessionModel;
   models.adminDomainModel = adminDomainModel;
   models.adminUserAccountModel = adminUserAccountModel;
   models.domainModel = domainModel;
   models.userAccountModel = userAccountModel;
 
-  return {
-    adminDomainModel,
-    adminUserAccountModel,
-    domainModel,
-    userAccountModel,
-  };
+  return models as any;
 };
 
 export const getModels = <ModelName extends keyof typeof models>(

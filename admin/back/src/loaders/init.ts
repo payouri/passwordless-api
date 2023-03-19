@@ -11,13 +11,18 @@ export default async function init({
   adminMongoConnection: Connection;
   apiMongoConnection: Connection;
 }) {
-  const { adminDomainModel, adminUserAccountModel, userAccountModel } =
-    await initModels({
-      adminMongoConnection: adminMongoConnection,
-      apiMongoConnection: apiMongoConnection,
-    });
+  const {
+    adminAuthSessionModel,
+    adminDomainModel,
+    adminUserAccountModel,
+    userAccountModel,
+  } = await initModels({
+    adminMongoConnection: adminMongoConnection,
+    apiMongoConnection: apiMongoConnection,
+  });
 
   initServices({
+    adminAuthSessionModel,
     adminDomainModel,
     adminUserAccountModel,
     userAccountModel,

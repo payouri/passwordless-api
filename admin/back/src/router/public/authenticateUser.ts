@@ -1,5 +1,5 @@
 import { RouteOptions } from "fastify";
-import { AuthMethodType } from "../../services/Auth/types";
+import { AuthMethodType } from "../../services/AuthSession/types";
 import { getUserAccountServices } from "../../services/UserAccount/UserAccount.services";
 
 export const authenticateUser: RouteOptions = {

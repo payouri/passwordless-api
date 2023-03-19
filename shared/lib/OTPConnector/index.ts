@@ -1,3 +1,4 @@
+import { isObject } from "@/shared/guards/isObject";
 import { customAlphabet } from "nanoid";
 import {
   ConnectorConfig,
@@ -67,6 +68,9 @@ const createProvider = <
   otp: OTPConfig[Methods];
 }): OTPProvider<Methods> & {
   generateOTP: () => string;
+  interpolateTemplate: (
+    params: OTPRequest<Methods, OTPProvidersConfigMap<Methods>[Methods]>
+  ) => string;
 } => {
   const { provider: providerConfig, otp } = config;
   const generateOTP = (() => {
@@ -76,9 +80,57 @@ const createProvider = <
     return () => generate();
   })();
 
+  const interpolateTemplate = ({
+    template,
+    templateVars,
+  }: {
+    template: OTPProvidersConfigMap<Methods>[Methods]["template"];
+    templateVars: OTPProvidersConfigMap<Methods>[Methods]["templateVars"];
+  }) => {
+    const templateRegexMap = templateVars.reduce((acc, key) => {
+      return {
+        ...acc,
+        [key]: new RegExp(`\{\{${key}\}\}`, "g"),
+      };
+    }, {} as Record<string, RegExp>);
+
+    if (!template.includes(`{{otp}}`)) {
+      throw new Error(`Missing template variable: otp`);
+    }
+
+    return ({
+      data,
+      ...params
+    }: OTPRequest<Methods, OTPProvidersConfigMap<Methods>[Methods]>) => {
+      template.replace(`{{otp}}`, params.otp);
+      if (!data || !isObject(data)) {
+        return template;
+      }
+
+      return templateVars.reduce((acc, key) => {
+        if (!Reflect.has(data, key)) {
+          throw new Error(`Missing template variable: ${key}`);
+        }
+
+        // @ts-ignore
+        const value = data[key];
+        const regExp = templateRegexMap[key];
+        if (!regExp || !value) {
+          throw new Error(`Missing template variable: ${key}`);
+        }
+
+        return acc.replace(regExp, value);
+      }, template);
+    };
+  };
+
   return {
     ...providerConfig,
     generateOTP,
+    interpolateTemplate: interpolateTemplate({
+      template: providerConfig.template,
+      templateVars: providerConfig.templateVars,
+    }),
   };
 };
 
@@ -93,6 +145,9 @@ const createProvidersMap = <
 }): {
   [Key in keyof OTPProvidersConfigMap<Methods>]: OTPProvidersConfigMap<Methods>[Methods] & {
     generateOTP: () => string;
+    interpolateTemplate: (
+      params: OTPRequest<Methods, OTPProvidersConfigMap<Methods>[Methods]>
+    ) => string;
   };
 } => {
   const { connector, otp, providersConfig } = config;
@@ -112,6 +167,9 @@ const createProvidersMap = <
     {} as {
       [Key in keyof OTPProvidersConfigMap<Methods>]: OTPProvidersConfigMap<Methods>[Methods] & {
         generateOTP: () => string;
+        interpolateTemplate: (
+          params: OTPRequest<Methods, OTPProvidersConfigMap<Methods>[Methods]>
+        ) => string;
       };
     }
   );
@@ -154,15 +212,21 @@ export const createOTPConnector =
             status: OTPStatus.PENDING,
           });
 
+          const interpolatedTemplate = provider.interpolateTemplate(params);
+
           provider
             .sendOTP({
               ...params,
               data: params.data || {},
+              interpolatedTemplate,
             })
             .catch(() => {
               setImmediate(() =>
                 config.connector.deleteOTP(params.identifier, params.method)
               );
+            })
+            .then(() => {
+              otpWasSent = params.otp;
             });
 
           return {

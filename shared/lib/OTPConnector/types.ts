@@ -110,7 +110,9 @@ export interface OTPProvider<
   templateVars: Variable[];
   template: string;
   sendOTP: (
-    params: OTPRequest<Method, OTPProvider<Method, Variable>>
+    params: OTPRequest<Method, OTPProvider<Method, Variable>> & {
+      interpolatedTemplate: string;
+    }
   ) => Promise<
     | {
         hasFailed: false;
