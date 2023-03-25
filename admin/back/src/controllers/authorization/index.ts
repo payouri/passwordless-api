@@ -1,10 +1,12 @@
-import { getAuthSessionModel } from "@/shared/entities/AuthSession/AuthSession.model";
-import { getRuntimeStore } from "../../loaders/runtimeStore";
+import { getJWTManager } from "../../lib/JWT/index.js";
+import { getRuntimeStore } from "../../loaders/runtimeStore.js";
 import {
   AuthSessionService,
   getAuthSessionService,
-} from "../../services/AuthSession/AuthSession.service";
-import { CreateAuthSessionParams } from "../../services/AuthSession/types";
+} from "../../services/AuthSession/AuthSession.service.js";
+import type { CreateAuthSessionParams } from "../../services/AuthSession/types";
+
+let authControllers: ReturnType<typeof buildAuthControllers>;
 
 export const buildAuthControllers = ({
   authSessionService = getAuthSessionService(),
@@ -13,7 +15,7 @@ export const buildAuthControllers = ({
 }) => {
   const domainId = getRuntimeStore().adminDomainId;
 
-  return {
+  const controller = {
     async startSession(
       params: Pick<CreateAuthSessionParams, "payload" | "type">
     ) {
@@ -25,5 +27,28 @@ export const buildAuthControllers = ({
 
       return authSession;
     },
+    async getAuthenticationData() {
+      const jwt = await getJWTManager();
+
+      return {
+        token: await jwt.encrypt({
+          expiresIn: "1h",
+          payload: {
+            domainId,
+            availableAuthMethods:
+              authSessionService.getAuthenticationMethods().methods,
+          },
+        }),
+      };
+    },
   };
+  return controller;
+};
+
+export const getAuthControllers = () => {
+  if (!authControllers) {
+    authControllers = buildAuthControllers({});
+  }
+
+  return authControllers;
 };

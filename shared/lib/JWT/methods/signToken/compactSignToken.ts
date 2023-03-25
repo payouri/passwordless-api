@@ -1,5 +1,5 @@
 import * as JWT from "jose";
-import { JWTAlgorithm, JWTEncryptionAlgorithm } from "../../types";
+import { JWTAlgorithm, JWTEncryptionAlgorithm } from "../../types.js";
 
 export type GetCompactSignedTokenParams = {
   secret: JWT.KeyLike | Uint8Array;

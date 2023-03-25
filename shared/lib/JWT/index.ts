@@ -1,12 +1,20 @@
-import { getSecret } from "./helpers/getSecret";
+import { generateTokenId } from "./helpers/generateTokenId.js";
+import { getGetSecret } from "./helpers/getSecret.js";
+import { loadSecret } from "./helpers/loadSecret.js";
+import { getDecodeToken } from "./methods/decodeToken/index.js";
+import { EncryptType, getEncryptToken } from "./methods/encryptToken/index.js";
 import { getSignToken, SignType } from "./methods/signToken/index.js";
-import { getEncryptToken, EncryptType } from "./methods/encryptToken/index.js";
-import { JWTEncryptionAlgorithm, JWTExpirationType, SecretType } from "./types";
-import { getUnsecureCreate } from "./methods/unsecureCreate";
-import { getUnsecureDecode } from "./methods/unsecureDecode";
-import { generateTokenId } from "./helpers/generateTokenId";
-import { getVerifyToken } from "./methods/verifyToken";
-import { getDecodeToken } from "./methods/decodeToken";
+import { getUnsecureCreate } from "./methods/unsecureCreate.js";
+import { getUnsecureDecode } from "./methods/unsecureDecode.js";
+import { getVerifyToken } from "./methods/verifyToken/index.js";
+import {
+  JWTAlgorithm,
+  JWTEncryptionAlgorithm,
+  JWTExpirationType,
+  SecretType,
+} from "./types.js";
+
+export { JWTAlgorithm, JWTEncryptionAlgorithm, JWTExpirationType, SecretType };
 
 export type JWTManagerParams = SecretType & {
   issuer: string;
@@ -16,12 +24,17 @@ export type JWTManagerParams = SecretType & {
 };
 
 export const createJWTManager = async function (params: JWTManagerParams) {
-  const secret = await getSecret(params);
+  const secret = await loadSecret(params);
+  const getSecret = getGetSecret(secret);
+
+  console.log({
+    secret,
+  });
 
   const sign = getSignToken({
     type: SignType.SIGN,
     algorithm: params.algorithm,
-    secret: secret,
+    secret: getSecret("private"),
     issuer: params.issuer,
   });
 
@@ -29,20 +42,20 @@ export const createJWTManager = async function (params: JWTManagerParams) {
     type: EncryptType.ENCRYPT,
     algorithm: params.algorithm,
     encryption: params.encryption,
-    secret,
+    secret: getSecret("public"),
     issuer: params.issuer,
   });
 
   const verify = getVerifyToken({
     encryption: params.encryption,
     issuer: params.issuer,
-    secret,
+    secret: getSecret("public"),
   });
 
   const decode = getDecodeToken({
     encryption: params.encryption,
     issuer: params.issuer,
-    secret,
+    secret: getSecret("private"),
   });
 
   const unsecure = {

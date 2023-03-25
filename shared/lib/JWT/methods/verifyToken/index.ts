@@ -1,6 +1,6 @@
 import * as JWT from "jose";
-import { isError, getErrorMessage } from "../../../../helpers";
-import { JWTEncryptionAlgorithm } from "../../types";
+import { isError, getErrorMessage } from "../../../../helpers/index.js";
+import { JWTEncryptionAlgorithm } from "../../types.js";
 
 export type GetVerifyTokenParams = {
   issuer: string;

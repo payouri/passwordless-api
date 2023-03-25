@@ -7,6 +7,7 @@ let loadedPublicKey: string | null = null;
 
 export const getPublicKey = async () => {
   const PEM = ADMIN_CONFIG.adminUser.publicKey;
+
   if (!PEM) {
     throw new Error("PEM is not defined");
   }
@@ -28,6 +29,7 @@ export const getPublicKey = async () => {
 
 export const getPrivateKey = async () => {
   const PEM = ADMIN_CONFIG.adminUser.privateKey;
+
   if (!PEM) {
     throw new Error("PEM is not defined");
   }

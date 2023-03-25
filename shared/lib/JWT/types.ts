@@ -6,6 +6,7 @@ export type SecretType =
       algorithm: JWTAlgorithm;
     }
   | {
+      publicKey: string;
       privateKey: string;
       algorithm: JWTAlgorithm;
     }
@@ -27,7 +28,9 @@ export enum JWTAlgorithm {
   PS256 = "PS256",
   PS384 = "PS384",
   PS512 = "PS512",
+  RSA_OAEP_256 = "RSA-OAEP-256",
   None = "none",
+  DIR = "dir",
 }
 
 export enum JWTEncryptionAlgorithm {
@@ -37,6 +40,7 @@ export enum JWTEncryptionAlgorithm {
   A128GCM = "A128GCM", // Recommended
   A192GCM = "A192GCM", // Optional
   A256GCM = "A256GCM", // Recommended
+  RSA_OAEP_256 = "RSA-OAEP-256", // Optional
 }
 
 /**

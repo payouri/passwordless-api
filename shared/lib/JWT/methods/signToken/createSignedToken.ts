@@ -1,5 +1,5 @@
 import * as JWT from "jose";
-import { JWTAlgorithm, JWTExpirationType } from "../../types";
+import { JWTAlgorithm, JWTExpirationType } from "../../types.js";
 
 export type GetCreateSignedTokenParams = {
   secret: JWT.KeyLike | Uint8Array;

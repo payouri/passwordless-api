@@ -1,19 +1,19 @@
 import {
   getCompactSignedToken,
   GetCompactSignedTokenParams,
-} from "./compactSignToken";
+} from "./compactSignToken.js";
 import {
   getCreateSignedToken,
   GetCreateSignedTokenParams,
-} from "./createSignedToken";
+} from "./createSignedToken.js";
 import {
   getFlattenedSignedToken,
   GetFlattenedSignedTokenParams,
-} from "./flattenedSignToken";
+} from "./flattenedSignToken.js";
 import {
   getGeneralSignedToken,
   GetGeneralSignedTokenParams,
-} from "./generalSignToken";
+} from "./generalSignToken.js";
 
 export enum SignType {
   SIGN = "sign",

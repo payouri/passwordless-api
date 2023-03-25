@@ -1,19 +1,19 @@
 import {
   getCompactEncryptToken,
   GetCompactEncryptTokenParams,
-} from "./compactEncrypt";
+} from "./compactEncrypt.js";
 import {
   getCreateEncryptedToken,
   GetCreateEncryptedTokenParams,
-} from "./createEncryptedToken";
+} from "./createEncryptedToken.js";
 import {
   getFlattenedEncryptToken,
   GetFlattenedEncryptTokenParams,
-} from "./flattenedEncrypt";
+} from "./flattenedEncrypt.js";
 import {
   getGeneralEncryptToken,
   GetGeneralEncryptTokenParams,
-} from "./generalEncrypt";
+} from "./generalEncrypt.js";
 
 export enum EncryptType {
   ENCRYPT = "encrypt",
@@ -29,12 +29,31 @@ export type GetEncryptTokenParamsMap = {
   [EncryptType.FLATTENED]: GetFlattenedEncryptTokenParams;
 };
 
+export type EncryptTokenFunction = {
+  [EncryptType.ENCRYPT]: typeof getCreateEncryptedToken;
+  [EncryptType.GENERAL]: typeof getGeneralEncryptToken;
+  [EncryptType.COMPACT]: typeof getCompactEncryptToken;
+  [EncryptType.FLATTENED]: typeof getFlattenedEncryptToken;
+};
+
 export type GetEncryptTokenParams<Type extends EncryptType> =
   Type extends EncryptType
     ? GetEncryptTokenParamsMap[Type] & { type: Type }
     : never;
 
-export const getEncryptToken = function <Type extends EncryptType>(
+export function getEncryptToken<Type extends EncryptType.GENERAL>(
+  params: GetEncryptTokenParams<Type>
+): ReturnType<typeof getGeneralEncryptToken>;
+export function getEncryptToken<Type extends EncryptType.FLATTENED>(
+  params: GetEncryptTokenParams<Type>
+): ReturnType<typeof getFlattenedEncryptToken>;
+export function getEncryptToken<Type extends EncryptType.COMPACT>(
+  params: GetEncryptTokenParams<Type>
+): ReturnType<typeof getCompactEncryptToken>;
+export function getEncryptToken<Type extends EncryptType.ENCRYPT>(
+  params: GetEncryptTokenParams<Type>
+): ReturnType<typeof getCreateEncryptedToken>;
+export function getEncryptToken<Type extends EncryptType>(
   params: GetEncryptTokenParams<Type>
 ) {
   if (params.type === EncryptType.ENCRYPT) {
@@ -47,4 +66,4 @@ export const getEncryptToken = function <Type extends EncryptType>(
     return getFlattenedEncryptToken(params);
   }
   return getGeneralEncryptToken(params);
-};
+}

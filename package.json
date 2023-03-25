@@ -17,6 +17,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@fastify/cors": "^8.2.1",
     "@iconscout/react-unicons": "^2.0.0",
     "@radix-ui/react-form": "^0.0.2",
     "@radix-ui/react-tabs": "^1.0.3",

@@ -1,9 +1,9 @@
+import * as JWT from "jose";
 import {
   JWTAlgorithm,
   JWTEncryptionAlgorithm,
   JWTExpirationType,
-} from "../../types";
-import * as JWT from "jose";
+} from "../../types.js";
 
 export type GetCompactEncryptTokenParams = {
   algorithm: JWTAlgorithm;

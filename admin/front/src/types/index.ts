@@ -1,4 +1,3 @@
-export enum AuthType {
-  SMS = "SMS",
-  EMAIL = "EMAIL",
-}
+import { AuthMethodType } from "../../../../shared/types";
+
+export { AuthMethodType as AuthType };

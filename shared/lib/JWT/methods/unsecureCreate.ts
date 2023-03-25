@@ -1,5 +1,5 @@
 import * as JWT from "jose";
-import { JWTExpirationType } from "../types";
+import { JWTExpirationType } from "../types.js";
 
 export type GetUnsecureCreateParams = {
   issuer: string;

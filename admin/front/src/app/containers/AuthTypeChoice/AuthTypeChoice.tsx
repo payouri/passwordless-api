@@ -1,25 +1,30 @@
 import { TabsRoot, TabsList, TabTrigger, TabContent } from "./styles";
 import { EmailAuth } from "../EmailAuth/EmailAuth";
-import { SMSAuth } from "../SMSAuth/SMSAuth";
+import { PhoneAuth } from "../PhoneAuth/PhoneAuth";
 
 import { AuthType } from "../../../types";
 import { CustomT, useTranslation } from "../../../customHooks/useTranslation";
 import { TFunction } from "i18next";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { getAuthDataRequest } from "../../../services";
 
 const ComponentMap = {
   [AuthType.EMAIL]: EmailAuth,
-  [AuthType.SMS]: SMSAuth,
+  [AuthType.PHONE]: PhoneAuth,
 };
 
 const getTabsNames = (t: CustomT) => ({
   [AuthType.EMAIL]: t("authType.email"),
-  [AuthType.SMS]: t("authType.phone"),
+  [AuthType.PHONE]: t("authType.phone"),
 });
 
 const DEFAULT_TAB = AuthType.EMAIL;
 
-export const AuthTypeChoice = () => {
+export const AuthTypeChoice = ({
+  onLogin,
+}: {
+  onLogin: (data: { authType: AuthType; identifier: string }) => Promise<void>;
+}) => {
   const [loading, setLoading] = useState(false);
   const currentTab = useRef(DEFAULT_TAB);
   const { t } = useTranslation();
@@ -31,10 +36,10 @@ export const AuthTypeChoice = () => {
 
     setLoading(true);
     try {
-      console.log({
-        [currentTab.current]: identifier,
+      await onLogin({
+        authType: currentTab.current,
+        identifier,
       });
-      await new Promise((resolve) => setTimeout(resolve, 2000));
     } finally {
       setLoading(false);
     }

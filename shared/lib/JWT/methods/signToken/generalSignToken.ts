@@ -1,5 +1,5 @@
 import * as JWT from "jose";
-import { JWTAlgorithm } from "../../types";
+import { JWTAlgorithm } from "../../types.js";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export type GetGeneralSignedTokenParams = {};

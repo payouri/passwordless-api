@@ -2,7 +2,7 @@ import { useTranslation } from "../../../customHooks/useTranslation";
 import { phoneAuthFormDataSchema } from "../../../validators";
 import { Form } from "../../components/Form/Form";
 
-export const SMSAuth = ({
+export const PhoneAuth = ({
   onLogin,
 }: {
   onLogin: (phone: string) => Promise<void> | void;

@@ -3,7 +3,7 @@ import {
   JWTAlgorithm,
   JWTEncryptionAlgorithm,
   JWTExpirationType,
-} from "../../types";
+} from "../../types.js";
 
 export type GetCreateEncryptedTokenParams = {
   secret: JWT.KeyLike | Uint8Array;

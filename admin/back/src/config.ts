@@ -2,6 +2,14 @@ import { config as dotEnvConfig } from "dotenv";
 
 dotEnvConfig({});
 
+export const NODE_ENV: "production" | "development" | "test" = [
+  "production",
+  "development",
+  "test",
+].includes(process.env.NODE_ENV || "")
+  ? (process.env.NODE_ENV as "production" | "development" | "test")
+  : "development";
+
 export const PORT = +(process.env.PORT || 3001);
 
 export const API_BASE_URL = process.env.API_BASE_URL || "";

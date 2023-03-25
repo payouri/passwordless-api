@@ -1,6 +1,15 @@
-import { RouteOptions } from "fastify";
+import {
+  ContextConfigDefault,
+  FastifySchema,
+  RawReplyDefaultExpression,
+  RawRequestDefaultExpression,
+  RawServerBase,
+  RouteGenericInterface,
+  RouteOptions,
+} from "fastify";
 import { AuthMethodType } from "../../services/AuthSession/types.js";
 import { getUserAccountServices } from "../../services/UserAccount/UserAccount.services.js";
+import { getRequestContext } from "../../../../../shared/lib/RequestContext/index.js";
 
 export const authenticateUser: RouteOptions = {
   method: "POST",
@@ -15,6 +24,11 @@ export const authenticateUser: RouteOptions = {
     },
   },
   handler: async (request, reply) => {
-    getUserAccountServices();
+    console.log(request.body);
+    console.log(getRequestContext(request));
+
+    reply.code(200).send({
+      message: "OK",
+    });
   },
 };
