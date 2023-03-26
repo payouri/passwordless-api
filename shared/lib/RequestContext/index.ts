@@ -2,7 +2,7 @@ import { FastifyInstance, FastifyRequest } from "fastify";
 
 type RequestContext = Record<string, unknown>;
 
-export const RequestContextSymbol = Symbol("RequestContext");
+const RequestContextSymbol = Symbol("RequestContext");
 
 export function initRequestContext(fastifyInstance: FastifyInstance) {
   fastifyInstance.decorateRequest(RequestContextSymbol, {});

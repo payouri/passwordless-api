@@ -70,7 +70,15 @@ export const createJWTManager = async function (params: JWTManagerParams) {
   };
 
   return {
-    encrypt,
+    encrypt: (
+      encodeParams: Omit<Parameters<typeof encrypt>[0], "expiresIn"> &
+        Partial<Pick<Parameters<typeof encrypt>[0], "expiresIn">>
+    ) => {
+      return encrypt({
+        ...encodeParams,
+        expiresIn: encodeParams.expiresIn || params.getDefaultTokenExpiration(),
+      });
+    },
     sign,
     verify,
     decode,

@@ -1,20 +1,19 @@
-import { isObject } from "@/shared/guards/isObject";
 import { customAlphabet } from "nanoid";
-import {
+import { isObject } from "../../../shared/guards/isObject.js";
+import { OTPMethod, OTPStatus } from "./types.js";
+import type {
   ConnectorConfig,
   OTPConfig,
   OTPConfigMap,
   OTPConnectorAPI,
   OTPFailedResponse,
-  OTPMethod,
+  OTPProvider,
   OTPProvidersConfigMap,
   OTPRequest,
   OTPSuccessResponse,
-  OTPProvider,
-  OTPStatus,
 } from "./types";
 
-export { OTPMethod, OTPStatus } from "./types";
+export { OTPMethod, OTPStatus } from "./types.js";
 
 const getErrorMessage = (error: unknown) => {
   if (typeof error === "string") {
@@ -210,6 +209,7 @@ export const createOTPConnector =
             retryLimit: config.otp[params.method].retryLimit,
             retryWait: config.otp[params.method].retryWait,
             status: OTPStatus.PENDING,
+            updatedAt: new Date(),
           });
 
           const interpolatedTemplate = provider.interpolateTemplate(params);

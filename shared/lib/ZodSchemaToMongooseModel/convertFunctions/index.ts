@@ -66,6 +66,7 @@ export function convertZodTypeToMongooseType<
   const result = Object.entries(properties).reduce<ReturnType<ConvertFunction>>(
     (acc, [fieldName, { type, ...options }]) => {
       const isRequired = requiredFields.includes(fieldName);
+
       if (!isConvertMap(type)) {
         return {
           ...acc,
@@ -110,7 +111,7 @@ export function convertZodTypeToMongooseType<
                         },
                 }
               : {}),
-            required: options.required || isRequired,
+            required: !rootKey ? isRequired : options.required || isRequired,
           }),
         };
       }
@@ -133,5 +134,6 @@ export function convertZodTypeToMongooseType<
       },
     };
   }
+
   return result;
 }

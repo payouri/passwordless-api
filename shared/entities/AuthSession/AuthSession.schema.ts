@@ -1,5 +1,6 @@
 import { AuthMethodType } from "../../types.js";
 import { z } from "zod";
+import { OTPDataSchema } from "../../../shared/lib/OTPConnector/types.js";
 
 export enum AuthSessionState {
   PENDING = "PENDING",
@@ -16,7 +17,7 @@ export const AuthSessionSchema = z.object({
   params: z.record(z.string(), z.string().or(z.number()).or(z.boolean())),
   state: z.nativeEnum(AuthSessionState),
   ownerId: z.string(),
-  otp: z.string().optional(),
+  otp: OTPDataSchema.optional(),
   accessToken: z.string().optional(),
 });
 

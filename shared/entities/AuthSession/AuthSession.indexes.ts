@@ -2,7 +2,10 @@ import { IndexDefinition, IndexOptions } from "mongoose";
 import { AuthSessionModel } from "./AuthSession.model.js";
 
 export const AuthSessionDefaultIndexes: [IndexDefinition, IndexOptions][] = [
-  [{ domainId: 1, authType: 1, otp: 1 }, { unique: true }],
+  [
+    { domainId: 1, authType: 1, otp: 1 },
+    { unique: true, partialFilterExpression: { otp: { $exists: true } } },
+  ],
   [
     {
       domainId: 1,

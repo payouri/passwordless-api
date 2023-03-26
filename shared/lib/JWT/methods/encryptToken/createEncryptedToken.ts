@@ -25,7 +25,7 @@ export const getCreateEncryptedToken = function <
     expiresIn: JWTExpirationType;
     audience?: string | string[];
   }) {
-    const token = new JWT.EncryptJWT(payload)
+    const token = new JWT.EncryptJWT(JSON.parse(JSON.stringify(payload)))
       .setProtectedHeader({
         alg: algorithm,
         enc: encryption,

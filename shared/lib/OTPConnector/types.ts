@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 export enum OTPMethod {
   EMAIL = "EMAIL",
   SMS = "SMS",
@@ -71,17 +73,24 @@ export interface OTPFailedResponse extends OTPResponse {
   // retryWait: number;
 }
 
-export interface OTPData<Method extends OTPMethod = OTPMethod> {
-  otp: string;
-  identifier: string;
+export const OTPDataSchema = z.object({
+  otp: z.string(),
+  identifier: z.string(),
+  method: z.nativeEnum(OTPMethod),
+  expiry: z.date(),
+  retryLimit: z.number(),
+  retryWait: z.number(),
+  retryCount: z.number(),
+  status: z.nativeEnum(OTPStatus),
+  createdAt: z.date().optional(),
+  updatedAt: z.date().optional(),
+});
+
+export type OTPData<Method extends OTPMethod = OTPMethod> = z.infer<
+  typeof OTPDataSchema
+> & {
   method: Method;
-  expiry: Date;
-  retryLimit: number;
-  retryWait: number;
-  retryCount: number;
-  status: OTPStatus;
-  createdAt: Date;
-}
+};
 
 export interface ConnectorConfig<Methods extends OTPMethod = OTPMethod> {
   saveOTP: (data: OTPData<Methods>) => Promise<void>;

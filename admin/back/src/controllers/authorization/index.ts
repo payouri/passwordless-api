@@ -4,7 +4,12 @@ import {
   AuthSessionService,
   getAuthSessionService,
 } from "../../services/AuthSession/AuthSession.service.js";
-import type { CreateAuthSessionParams } from "../../services/AuthSession/types";
+import type {
+  CreateAuthSessionParams,
+  TryValidateSessionParams,
+  UpdateAuthSessionOTPParams,
+} from "../../services/AuthSession/types";
+import { ValidateSessionType } from "../../services/AuthSession/types";
 
 let authControllers: ReturnType<typeof buildAuthControllers>;
 
@@ -16,6 +21,17 @@ export const buildAuthControllers = ({
   const domainId = getRuntimeStore().adminDomainId;
 
   const controller = {
+    async validateSession<Type extends ValidateSessionType>(
+      params: TryValidateSessionParams<Type>
+    ) {},
+    async updateSession(params: UpdateAuthSessionOTPParams) {
+      const authSession = await authSessionService.updateSessionOTP({
+        ...params,
+        domainId,
+      });
+
+      return authSession;
+    },
     async startSession(
       params: Pick<CreateAuthSessionParams, "payload" | "type">
     ) {

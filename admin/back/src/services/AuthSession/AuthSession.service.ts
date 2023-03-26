@@ -8,7 +8,11 @@ import { generateHashFromString } from "../../../../../shared/helpers/generateHa
 import { getErrorMessage } from "../../../../../shared/helpers/index.js";
 import { CustomResponse } from "../../utils/types/CustomResponse.js";
 import { DEFAULT_AUTH_SESSION_TTL } from "./constants.js";
-import { AuthMethodType, CreateAuthSessionParams } from "./types.js";
+import {
+  AuthMethodType,
+  CreateAuthSessionParams,
+  UpdateAuthSessionOTPParams,
+} from "./types.js";
 
 let authSessionService: ReturnType<typeof buildAuthService>;
 
@@ -44,6 +48,7 @@ export const buildAuthService = ({
           ),
           state: AuthSessionState.PENDING,
           domainId,
+          otp: undefined,
         });
 
         return {
@@ -61,12 +66,7 @@ export const buildAuthService = ({
       }
     },
     async updateSessionOTP(
-      params: (
-        | { sessionId: string }
-        | Omit<CreateAuthSessionParams, "durationInSeconds">
-      ) & {
-        otp: string;
-      }
+      params: UpdateAuthSessionOTPParams
     ): Promise<CustomResponse<AuthSession, "session_not_found">> {
       const updatedSession = await authSessionModel.findOneAndUpdate(
         {

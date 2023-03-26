@@ -1,7 +1,9 @@
 import {
   createOTPConnector,
   OTPMethod,
-} from "../../../../../shared/lib/OTPConnector";
+} from "../../../../../shared/lib/OTPConnector/index.js";
+
+export { OTPMethod };
 
 const connector = createOTPConnector({
   connector: {
@@ -46,7 +48,7 @@ const connector = createOTPConnector({
       };
     },
     template: "OTP is {{otp}}",
-    templateVars: ["otp"],
+    templateVars: [],
   },
   [OTPMethod.SMS]: {
     method: OTPMethod.SMS,
@@ -57,17 +59,8 @@ const connector = createOTPConnector({
       };
     },
     template: "OTP is {{otp}}",
-    templateVars: ["otp"],
+    templateVars: [],
   },
 });
 
-const code = connector.generateOTP(OTPMethod.SMS);
-
-connector.sendOTP({
-  identifier: "test",
-  method: OTPMethod.SMS,
-  data: {
-    sqdqs: "sdqdsq",
-  },
-  otp: code as unknown as string,
-});
+export const getOTPConnector = () => connector;

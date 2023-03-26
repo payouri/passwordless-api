@@ -21,6 +21,7 @@ export const verifyToken =
           await getJWTManager()
         ).decode({
           token,
+          options: {},
         });
 
         if (decoded.hasFailed) {
